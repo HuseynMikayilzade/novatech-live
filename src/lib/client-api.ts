@@ -1,4 +1,12 @@
-import type { AnswerRequest, ApiErrorBody, ResetResponse, ResultsResponse } from "./api-types.ts";
+import type {
+  AnswerRequest,
+  ApiErrorBody,
+  LiveResponse,
+  LiveUpdateRequest,
+  PresenterSessionResponse,
+  ResetResponse,
+  ResultsResponse,
+} from "./api-types.ts";
 
 export class ApiError extends Error {
   constructor(
@@ -38,4 +46,24 @@ export function fetchResults(signal?: AbortSignal): Promise<ResultsResponse> {
 
 export function resetResults(key: string): Promise<ResetResponse> {
   return request("/api/admin/reset", { method: "POST", body: JSON.stringify({ key }) });
+}
+
+export function fetchLive(signal?: AbortSignal): Promise<LiveResponse> {
+  return request("/api/live", { signal });
+}
+
+export function publishLive(update: LiveUpdateRequest): Promise<LiveResponse> {
+  return request("/api/live", { method: "POST", body: JSON.stringify(update) });
+}
+
+export function endLive(): Promise<LiveResponse> {
+  return request("/api/live", { method: "DELETE" });
+}
+
+export function fetchPresenterSession(): Promise<{ active: boolean }> {
+  return request("/api/admin/session");
+}
+
+export function startPresenterSession(key: string): Promise<PresenterSessionResponse> {
+  return request("/api/admin/session", { method: "POST", body: JSON.stringify({ key }) });
 }

@@ -1,6 +1,7 @@
 import type { RawSnapshot } from "@/domain/aggregate.ts";
+import type { LiveState } from "@/domain/live.ts";
 import { QUESTION_IDS, type QuestionId } from "@/domain/questions.ts";
-import type { AnswerStore, SaveAnswerInput } from "./types.ts";
+import { LIVE_TTL_SEC, type AnswerStore, type SaveAnswerInput } from "./types.ts";
 
 /**
  * Process-local store for local development and as a last-resort fallback.
@@ -13,6 +14,7 @@ export class MemoryAnswerStore implements AnswerStore {
   private answers = new Map<QuestionId, Map<string, string>>();
   private durations = new Map<QuestionId, Map<string, number>>();
   private counters = new Map<string, { count: number; expiresAt: number }>();
+  private live: { state: LiveState; expiresAt: number } | null = null;
 
   async saveAnswer({ sessionId, questionId, value, durationMs }: SaveAnswerInput): Promise<void> {
     this.sessions.add(sessionId);
@@ -36,6 +38,15 @@ export class MemoryAnswerStore implements AnswerStore {
     this.sessions.clear();
     this.answers.clear();
     this.durations.clear();
+  }
+
+  async getLive(): Promise<LiveState | null> {
+    if (this.live && this.live.expiresAt <= Date.now()) this.live = null;
+    return this.live?.state ?? null;
+  }
+
+  async setLive(state: LiveState | null): Promise<void> {
+    this.live = state ? { state, expiresAt: Date.now() + LIVE_TTL_SEC * 1000 } : null;
   }
 
   async hit(key: string, windowSec: number): Promise<number> {

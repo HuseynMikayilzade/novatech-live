@@ -1,4 +1,5 @@
 import type { LiveResults } from "@/domain/aggregate.ts";
+import type { LiveState } from "@/domain/live.ts";
 import type { QuestionId } from "@/domain/questions.ts";
 
 export interface AnswerRequest {
@@ -11,6 +12,21 @@ export interface ResultsResponse extends LiveResults {
   readonly generatedAt: string;
   /** False when the server runs without Redis and data is not durable. */
   readonly persistent: boolean;
+}
+
+export interface LiveResponse {
+  /** Null when no presentation is running; phones then use the free flow. */
+  readonly active: LiveState | null;
+}
+
+export interface LiveUpdateRequest {
+  readonly slide: number;
+  readonly questionIds: readonly QuestionId[];
+}
+
+export interface PresenterSessionResponse {
+  readonly ok: true;
+  readonly expiresAt: string;
 }
 
 export interface ResetResponse {

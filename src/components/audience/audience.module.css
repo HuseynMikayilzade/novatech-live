@@ -326,6 +326,10 @@
   animation: probe 900ms ease-in-out infinite alternate;
 }
 
+.packet[data-state="waiting"] .packetDot {
+  animation: probe 1800ms ease-in-out infinite alternate;
+}
+
 .packet[data-state="delivered"] .packetDot {
   animation: deliver 700ms cubic-bezier(0.6, 0, 0.3, 1) forwards;
 }
@@ -380,6 +384,27 @@
 
 .doneText {
   color: var(--muted);
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--violet-tint);
+  color: var(--violet-soft);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.liveBadge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
 }
 
 .doneActions {
