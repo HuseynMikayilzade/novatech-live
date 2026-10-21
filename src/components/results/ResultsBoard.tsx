@@ -9,7 +9,7 @@ import { QrCode } from "../shared/QrCode.tsx";
 import { MaturityRadar, OptionBars, ScaleColumns } from "./charts.tsx";
 import styles from "./results.module.css";
 
-interface KpiTile {
+export interface KpiTile {
   readonly label: string;
   readonly value: string;
   readonly unit?: string;
@@ -17,7 +17,7 @@ interface KpiTile {
 }
 
 /** Each live KPI is paired with the deck metric it mirrors, so the demo connects back to slide 7. */
-function buildTiles(k: LiveKpis): KpiTile[] {
+export function buildTiles(k: LiveKpis): KpiTile[] {
   return [
     { label: "İştirakçılar", value: String(k.participants), note: `Cəmi ${k.totalAnswers} cavab` },
     {

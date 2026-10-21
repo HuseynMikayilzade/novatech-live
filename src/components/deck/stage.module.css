@@ -1,0 +1,235 @@
+/* ---------- Projector screen ---------- */
+.screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  touch-action: pan-y;
+  cursor: none;
+}
+
+.screen[data-hud] {
+  cursor: default;
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: rgb(255 255 255 / 0.06);
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--amber);
+  transition: width 300ms ease;
+}
+
+.hud {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(21 28 49 / 0.92);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+  font-size: 14px;
+}
+
+.screen[data-hud] .hud,
+.hud:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hudButton,
+.hudText {
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hudButton {
+  width: 34px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.hudText {
+  padding: 0 12px;
+}
+
+.hudButton:hover:not(:disabled),
+.hudText:hover {
+  background: var(--panel);
+}
+
+.hudButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.hudCount {
+  min-width: 64px;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.hudDivider {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--line);
+}
+
+/* ---------- Sync control ---------- */
+.syncBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.syncBadge[data-state="on"] {
+  border-color: var(--amber);
+  color: var(--text);
+}
+
+.syncDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.syncBadge[data-state="on"] .syncDot {
+  background: var(--amber);
+}
+
+.syncError {
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.dialog {
+  width: min(480px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--ink-raised);
+  color: var(--text);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.dialogTitle {
+  font-size: 1.25rem;
+}
+
+.dialogText {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.dialogInput {
+  height: 48px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--ink);
+  color: var(--text);
+  font: inherit;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.primary,
+.ghost {
+  height: 44px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+}
+
+.primary {
+  border: 0;
+  background: var(--amber);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+}
+
+.ghost {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+/* ---------- Print backup ---------- */
+.print {
+  display: none;
+}
+
+.printPage {
+  position: relative;
+  overflow: hidden;
+  break-after: page;
+}
+
+@media print {
+  @page {
+    size: 1920px 1080px;
+    margin: 0;
+  }
+
+  .screen {
+    display: none;
+  }
+
+  .print {
+    display: block;
+  }
+
+  .print * {
+    animation: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
