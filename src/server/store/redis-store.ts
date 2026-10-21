@@ -1,9 +1,9 @@
 import { Redis } from "@upstash/redis";
 import type { RawSnapshot } from "@/domain/aggregate.ts";
+import { parseLiveState, type LiveState } from "@/domain/live.ts";
 import { QUESTION_IDS, type QuestionId } from "@/domain/questions.ts";
-import { keys, type AnswerStore, type SaveAnswerInput } from "./types.ts";
-
-type HashReply = Record<string, string> | null;
+import { toRecord, type HashReply } from "./hash-reply.ts";
+import { LIVE_TTL_SEC, keys, type AnswerStore, type SaveAnswerInput } from "./types.ts";
 
 export class RedisAnswerStore implements AnswerStore {
   readonly persistent = true;
@@ -41,8 +41,8 @@ export class RedisAnswerStore implements AnswerStore {
     const answers = {} as Record<QuestionId, Record<string, string>>;
     const durations = {} as Record<QuestionId, Record<string, number>>;
     QUESTION_IDS.forEach((q, i) => {
-      answers[q] = hashes[i * 2] ?? {};
-      const rawDurations = hashes[i * 2 + 1] ?? {};
+      answers[q] = toRecord(hashes[i * 2]);
+      const rawDurations = toRecord(hashes[i * 2 + 1]);
       durations[q] = Object.fromEntries(
         Object.entries(rawDurations).map(([sid, ms]) => [sid, Number(ms)] as const).filter(([, ms]) => Number.isFinite(ms)),
       );
@@ -52,6 +52,21 @@ export class RedisAnswerStore implements AnswerStore {
 
   async reset(): Promise<void> {
     await this.redis.del(keys.sessions, ...QUESTION_IDS.flatMap((q) => [keys.answers(q), keys.durations(q)]));
+  }
+
+  async getLive(): Promise<LiveState | null> {
+    const raw = await this.redis.get<string>(keys.live);
+    if (!raw) return null;
+    try {
+      return parseLiveState(JSON.parse(raw));
+    } catch {
+      return null;
+    }
+  }
+
+  async setLive(state: LiveState | null): Promise<void> {
+    if (state) await this.redis.set(keys.live, JSON.stringify(state), { ex: LIVE_TTL_SEC });
+    else await this.redis.del(keys.live);
   }
 
   async hit(key: string, windowSec: number): Promise<number> {

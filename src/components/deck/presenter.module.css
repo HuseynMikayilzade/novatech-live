@@ -1,0 +1,247 @@
+.view {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  grid-template-rows: auto minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-areas:
+    "bar bar"
+    "current side"
+    "notes side";
+  gap: var(--space-4);
+  height: 100vh;
+  padding: var(--space-4);
+  background: var(--ink);
+}
+
+.bar {
+  grid-area: bar;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+}
+
+.position {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: 1.0625rem;
+}
+
+.position strong {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.timers {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.timers small {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.timers [data-over] {
+  color: var(--amber);
+}
+
+.behind {
+  color: var(--danger);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.button {
+  height: 36px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--ink-raised);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.button[aria-pressed="true"] {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.current {
+  grid-area: current;
+  min-height: 0;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: #000;
+}
+
+.canvas {
+  height: 100%;
+}
+
+.side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+}
+
+.label {
+  margin-bottom: var(--space-2);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nextCanvas {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  background: #000;
+}
+
+.end {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--muted);
+}
+
+.liveBox {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-m);
+  background: var(--amber-tint);
+}
+
+.liveRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+}
+
+.liveRow strong {
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  margin-top: var(--space-2);
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: var(--space-2);
+}
+
+.navButton {
+  height: 52px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--panel);
+  font-family: var(--font-display);
+  cursor: pointer;
+}
+
+.navButton[data-primary] {
+  border: 0;
+  background: var(--amber);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.navButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 6px var(--space-2);
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.listItem span {
+  min-width: 1.75rem;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.listItem em {
+  margin-left: auto;
+  color: var(--amber);
+  font-size: 0.75rem;
+  font-style: normal;
+}
+
+.listItem[aria-current] {
+  background: var(--violet-tint);
+  color: var(--text);
+}
+
+.notes {
+  grid-area: notes;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.notesText {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-m);
+  background: var(--ink-raised);
+  font-size: 1.25rem;
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+@media (max-width: 1000px) {
+  .view {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas: "bar" "current" "side" "notes";
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .current {
+    aspect-ratio: 16 / 9;
+  }
+}

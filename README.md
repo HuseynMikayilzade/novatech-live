@@ -7,6 +7,8 @@
 | `/` | Auditoriya | 6 sual, hər biri təqdimatın bir slaydına bağlıdır |
 | `/neticeler` | Proyektor | 5 canlı KPI, hər sualın qrafiki, QR kod. Hər 3 saniyədən bir yenilənir |
 | `/admin` | Təqdimatçı | Sınaq cavablarını sıfırlamaq (açarla qorunur) |
+| `/teqdimat` | Proyektor | 13 slaydlıq təqdimat, canlı nəticələr slaydların içində |
+| `/teqdimat/natiq` | Təqdimatçı (noutbuk) | Cari və növbəti slayd, qeydlər, taymer, canlı cavab sayı |
 
 ## Vercel-ə deploy (təxminən 10 dəqiqə)
 
@@ -18,6 +20,26 @@
 6. **Yoxlayın.** `/neticeler` açın: yuxarıda "Məlumat bazası qoşulmayıb" xəbərdarlığı **olmamalıdır**. Telefondan bir cavab verin, panel 3 saniyə ərzində yenilənməlidir. Sonra `/admin`-də nəticələri sıfırlayın.
 
 Dəqiq ünvan məlum olandan sonra QR kodu təqdimata əlavə edin. `/neticeler` səhifəsindəki QR kod hər zaman cari domeni göstərir.
+
+## Təqdimat rejimi
+
+PowerPoint lazım deyil: slaydlar saytın içindədir və 1920×1080 səhnə kimi istənilən ekrana miqyaslanır.
+
+1. Proyektora qoşulmuş ekranda `/teqdimat` açın, **F** ilə tam ekrana keçin.
+2. Noutbukda **P** basın (və ya `/teqdimat/natiq` açın): qeydlər, taymer və növbəti slayd orada görünür. İki pəncərə avtomatik sinxron işləyir.
+3. Aşağıdakı paneldən **Sinxron söndürülüb** düyməsinə basıb `ADMIN_KEY`-i bir dəfə daxil edin. Açar serverdə 8 saatlıq httpOnly sessiya cookie-sinə çevrilir, brauzerdə saxlanılmır. Bundan sonra auditoriyanın telefonları sizin slaydınızı izləyir: sual slaydında (1, 2, 7, 11, 12) həmin sual telefonda avtomatik açılır, digər slaydlarda telefon gözləmə ekranı göstərir. Sinxronu söndürəndə və ya 4 saat sonra telefonlar sərbəst rejimə qayıdır.
+
+| Düymə | Əməl |
+| --- | --- |
+| → ← Space PageDown PageUp | Növbəti / əvvəlki slayd (klikerlər də işləyir) |
+| Home / End | İlk / son slayd |
+| rəqəm + Enter | Həmin slayda keç (məs. `12` Enter) |
+| R | Cari slaydın canlı nəticələri (Esc bağlayır) |
+| B və ya . | Qara ekran |
+| F | Tam ekran |
+| P | Natiq görünüşünü aç |
+
+Wi-Fi-ya etibar yoxdursa, paneldəki **PDF** düyməsi ilə (və ya Ctrl+P → "PDF kimi saxla") bütün slaydları ehtiyat PDF kimi saxlayın. Slaydların mətni `src/components/deck/slides/`, natiq qeydləri isə `src/content/speaker-notes.ts` faylındadır.
 
 ## Lokal işə salma
 
@@ -36,8 +58,9 @@ Redis dəyişənləri olmadan lokal rejim yaddaşda işləyir (məlumat server y
 src/
   domain/        Suallar kataloqu, cavab qaydaları, KPI hesablanması (təmiz funksiyalar, testlərlə)
   server/        Saxlama portu + Redis və yaddaş adapterləri, sessiya, sorğu limiti, admin yoxlaması
-  app/api/       answer · results · admin/reset - nazik HTTP qatı
-  components/    audience · results · admin · shared
+  app/api/       answer · results · live · admin/reset · admin/session - nazik HTTP qatı
+  components/    audience · results · admin · deck (slaydlar, natiq görünüşü) · shared
+  content/       Slayd reyestri və natiq qeydləri
   lib/           API müqaviləsi, client sorğuları, polling hook-u, formatlaşdırma
 ```
 
