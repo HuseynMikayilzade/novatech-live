@@ -1,9 +1,8 @@
 import { Redis } from "@upstash/redis";
 import type { RawSnapshot } from "@/domain/aggregate.ts";
 import { QUESTION_IDS, type QuestionId } from "@/domain/questions.ts";
+import { toRecord, type HashReply } from "./hash-reply.ts";
 import { keys, type AnswerStore, type SaveAnswerInput } from "./types.ts";
-
-type HashReply = Record<string, string> | null;
 
 export class RedisAnswerStore implements AnswerStore {
   readonly persistent = true;
@@ -41,8 +40,8 @@ export class RedisAnswerStore implements AnswerStore {
     const answers = {} as Record<QuestionId, Record<string, string>>;
     const durations = {} as Record<QuestionId, Record<string, number>>;
     QUESTION_IDS.forEach((q, i) => {
-      answers[q] = hashes[i * 2] ?? {};
-      const rawDurations = hashes[i * 2 + 1] ?? {};
+      answers[q] = toRecord(hashes[i * 2]);
+      const rawDurations = toRecord(hashes[i * 2 + 1]);
       durations[q] = Object.fromEntries(
         Object.entries(rawDurations).map(([sid, ms]) => [sid, Number(ms)] as const).filter(([, ms]) => Number.isFinite(ms)),
       );
