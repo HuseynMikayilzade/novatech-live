@@ -1,0 +1,89 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: min(520px, 100%);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
+}
+
+.title {
+  font-size: 1.75rem;
+}
+
+.text {
+  color: var(--muted);
+}
+
+.status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.status div {
+  padding: var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--panel);
+}
+
+.status dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.status dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.form input {
+  height: 48px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+
+.danger {
+  height: 52px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--danger);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.danger[data-armed] {
+  background: var(--danger);
+  color: var(--ink);
+}
+
+.danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirm,
+.error {
+  color: var(--danger);
+}
+
+.ok {
+  color: var(--amber);
+}
+
+.links {
+  display: flex;
+  gap: var(--space-5);
+}
